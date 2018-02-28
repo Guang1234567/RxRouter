@@ -1,7 +1,14 @@
 # RxRouter
-- Thanks to Rxjava, It is very easy to use. see [Usage](#Usage).
+- Thanks to Rxjava, **RxRouter** is very easy to used. see [Usage](#usage).
 - The router of android for Activity, Fragment, js and everything.
 
+#Download
+
+[ ![newest_verion](https://api.bintray.com/packages/ggg1234567/maven/rxrouter/images/download.svg) ](https://bintray.com/ggg1234567/maven/rxrouter/_latestVersion)
+
+```gradle
+implementation 'com.github.router:rxrouter:<newest_verion>'
+```
 # Usage
 
 1. create Router instance.

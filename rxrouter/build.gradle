@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+dependencies {
+    api rootProject.ext.rxJava
+    implementation rootProject.ext.supportAnnotations
+
+    androidTestImplementation rootProject.ext.supportTestRunner
+}
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    lintOptions {
+        textOutput 'stdout'
+        textReport true
+    }
+}
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'rxrouter'
+
+    publishedGroupId = 'com.github.router'
+    libraryName = 'rxrouter'
+    artifact = 'rxrouter'
+
+    libraryDescription = 'Dynamic in app URL router for Android, implemented by Rxjava'
+
+    siteUrl = 'https://github.com/Guang1234567/RxRouter'
+    gitUrl = 'https://github.com/Guang1234567/RxRouter.git'
+
+    libraryVersion = '1.1.1'
+
+    developerId = 'GG1234567'
+    developerName = 'GG1234567'
+    developerEmail = 'lihansey163@163.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: '../gradle/installv1.gradle'
+apply from: '../gradle/bintrayv1.gradle'
