@@ -17,6 +17,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".SecondActivity">
+            <!-- Schame -->
+            <intent-filter>
+                <data
+                    android:host="www.mycompany.com"
+                    android:path="/second_activity"
+                    android:scheme="router"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
         </activity>
     </application>
 

@@ -4,6 +4,7 @@ apply plugin: 'maven'
 dependencies {
     api rootProject.ext.rxJava
     implementation rootProject.ext.supportAnnotations
+    implementation rootProject.ext.supportV4
 
     androidTestImplementation rootProject.ext.supportTestRunner
 }
