@@ -42,7 +42,7 @@ ext {
     siteUrl = 'https://github.com/Guang1234567/RxRouter'
     gitUrl = 'https://github.com/Guang1234567/RxRouter.git'
 
-    libraryVersion = '1.1.1'
+    libraryVersion = '2.0.0'
 
     developerId = 'GG1234567'
     developerName = 'GG1234567'

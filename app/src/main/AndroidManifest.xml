@@ -21,8 +21,8 @@
             <intent-filter>
                 <data
                     android:host="www.mycompany.com"
-                    android:path="/second_activity"
-                    android:scheme="router"/>
+                    android:path="/ui/second_activity"
+                    android:scheme="rxrouter"/>
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>

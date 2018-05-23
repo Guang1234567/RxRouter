@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     public Pair<String, Bundle> apply(Object o) throws Exception {
                         Bundle args = new Bundle();
                         args.putString(ActivityNavigator.NAVI_TO_SECOND.PARAM_AAA, "value_bbbbb8");
-                        return new Pair<>(ActivityNavigator.NAVI_TO_SECOND.ALIAS_01, args);
+                        return new Pair<>(ActivityNavigator.NAVI_TO_SECOND.ALIAS_02, args);
                     }
                 })
                 .subscribe(mNavigator.naviByAlias());

@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 public class SecondActivity extends AppCompatActivity {
-
     public static final String EXTRA_VALUE_FOR_RESULT_CODE = "extra_value_for_result_code";
 
     @Override
