@@ -15,7 +15,7 @@ implementation 'com.github.router:rxrouter:<newest_verion>'
 
 ```java
 
-final Router router = new Router();
+RxRouters mRouters = new RxRouters(application);
         
 ```
 
