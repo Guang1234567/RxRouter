@@ -56,12 +56,15 @@ RxView.clicks(tv)
 
 ```
 
-- route to do anything
+- route to do anything (eg: using as "url router" with [JsBridge](https://github.com/lzyzsd/JsBridge))
 
 
 ```java
+public final static class NAVI_TO_DO_STH {
 
-public static final String ALIAS_DO_STH_03 = "https://www.mycompany.com/ui/doSth";
+    public static final String ALIAS_DO_STH_03 = "https://www.mycompany.com/ui/doSth";
+
+}
 
 
 RxRouters mRouters = new RxRouters(application);
@@ -82,7 +85,10 @@ RxView.clicks(tv)
             public Pair<String, Bundle> apply(Object o) throws Exception {
                 Bundle args = new Bundle();
                 args.putString(NAVI_TO_SECOND.PARAM_AAA, "value_bbbbb8");
-                return new Pair<>(NAVI_TO_SECOND.ALIAS_DO_STH_03, args);
+                return new Pair<>(
+                NAVI_TO_SECOND.ALIAS_DO_STH_03
+                , args
+                );
             }
         })
         .subscribe(mRouters.asAliasConsumer());                
