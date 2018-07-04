@@ -2,14 +2,13 @@ package com.github.gg.rxrouter;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jakewharton.rxbinding2.view.RxView;
 
-import io.reactivex.functions.Function;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,15 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv = findViewById(R.id.text);
         RxView.clicks(tv)
-                .map(new Function<Object, Pair<String, Bundle>>() {
+                .subscribe(new Consumer<Object>() {
                     @Override
-                    public Pair<String, Bundle> apply(Object o) throws Exception {
+                    public void accept(Object o) throws Exception {
                         Bundle args = new Bundle();
                         args.putString(ActivityNavigator.NAVI_TO_SECOND.PARAM_AAA, "value_bbbbb8");
-                        return new Pair<>(ActivityNavigator.NAVI_TO_SECOND.ALIAS_02, args);
+                        mNavigator.naviTo(ActivityNavigator.NAVI_TO_SECOND.ALIAS_02, args);
                     }
-                })
-                .subscribe(mNavigator.naviByAlias());
+                });
     }
 
     private void showToast(Object request) {

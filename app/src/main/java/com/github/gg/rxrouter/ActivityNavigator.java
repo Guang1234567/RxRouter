@@ -2,23 +2,25 @@ package com.github.gg.rxrouter;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.MainThread;
-import android.support.v4.util.Pair;
 import android.widget.Toast;
 
+import com.github.router.ActivityRouter;
 import com.github.router.RxRouters;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * @author Guang1234567
@@ -40,21 +42,44 @@ public final class ActivityNavigator {
 
     private List<Activity> mActivitys;
 
+    private final PublishSubject<Object> mKillSwitch = PublishSubject.create();
+
     public ActivityNavigator(Application application) {
         initLifecycle(application);
         initRouter(application);
     }
 
     private void initRouter(final Application application) {
-        mRouters = new RxRouters(application);
-        mRouters.registerAlias(SecondActivity.class, NAVI_TO_SECOND.ALIAS_01);
-        mRouters.registerAlias(SecondActivity.class, NAVI_TO_SECOND.ALIAS_02);
-        mRouters.asAliasObservable(NAVI_TO_SECOND.ALIAS_DO_STH_03)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Pair<String, Bundle>>() {
+        mRouters = new RxRouters(AndroidSchedulers.mainThread(),
+                null,
+                new ObservableTransformer<ActivityRouter.Query, ActivityRouter.Query>() {
                     @Override
-                    public void accept(Pair<String, Bundle> pair) throws Exception {
-                        Toast.makeText(application, String.valueOf(pair), Toast.LENGTH_SHORT).show();
+                    public ObservableSource<ActivityRouter.Query> apply(Observable<ActivityRouter.Query> upstream) {
+                        return upstream.takeUntil(mKillSwitch);
+                    }
+                });
+        mRouters.activityRouter()
+                .createQuery(NAVI_TO_SECOND.ALIAS_01, SecondActivity.class, application)
+                .subscribe(new Consumer<ActivityRouter.Query>() {
+                    @Override
+                    public void accept(ActivityRouter.Query query) throws Exception {
+                        query.run();
+                    }
+                });
+        mRouters.activityRouter()
+                .createQuery(NAVI_TO_SECOND.ALIAS_02, SecondActivity.class, application)
+                .subscribe(new Consumer<ActivityRouter.Query>() {
+                    @Override
+                    public void accept(ActivityRouter.Query query) throws Exception {
+                        query.run();
+                    }
+                });
+        mRouters.simpleRouter()
+                .createQuery(NAVI_TO_SECOND.ALIAS_DO_STH_03)
+                .subscribe(new Consumer<Bundle>() {
+                    @Override
+                    public void accept(Bundle args) throws Exception {
+                        Toast.makeText(application, String.valueOf(args), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -112,6 +137,8 @@ public final class ActivityNavigator {
             activity.finish();
             iterator.remove();
         }
+
+        mKillSwitch.onNext("kill");
     }
 
     public void finishAllActivity() {
@@ -127,15 +154,7 @@ public final class ActivityNavigator {
         }
     }
 
-    public Consumer<? super Intent> naviByIntent() {
-        return mRouters.asIntentConsumer();
-    }
-
-    public Consumer<? super Pair<Uri, Bundle>> naviByUri() {
-        return mRouters.asUriConsumer();
-    }
-
-    public Consumer<? super Pair<String, Bundle>> naviByAlias() {
-        return mRouters.asAliasConsumer();
+    public void naviTo(String alias, Bundle args) {
+        mRouters.route(alias, args);
     }
 }
