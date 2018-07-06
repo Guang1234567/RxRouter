@@ -12,6 +12,10 @@ import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
 
+/**
+ * @author Guang1234567
+ * @date 2018/2/27 11:03
+ */
 public class SimpleRouter {
 
     private Subject<Pair<String, Bundle>> mTrigger;

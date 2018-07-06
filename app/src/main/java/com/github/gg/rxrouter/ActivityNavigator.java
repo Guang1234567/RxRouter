@@ -2,6 +2,7 @@ package com.github.gg.rxrouter;
 
 import android.app.Activity;
 import android.app.Application;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,7 +34,7 @@ public final class ActivityNavigator {
         public static final String ALIAS_01 = "rxrouter://www.mycompany.com/ui/second_activity_1";
         public static final String ALIAS_02 = "https://www.mycompany.com/ui/second_activity_2";
 
-        public static final String ALIAS_DO_STH_03 = "https://www.mycompany.com/ui/doSth";
+        public static final String ALIAS_GPS_CURRENT_POS = "https://www.mycompany.com/ui/gps_current_pos";
 
         public static final String PARAM_AAA = "param_aaa";
     }
@@ -51,13 +52,20 @@ public final class ActivityNavigator {
 
     private void initRouter(final Application application) {
         mRouters = new RxRouters(AndroidSchedulers.mainThread(),
-                null,
+                new ObservableTransformer<Bundle, Bundle>() {
+                    @Override
+                    public ObservableSource<Bundle> apply(Observable<Bundle> upstream) {
+                        return upstream.takeUntil(mKillSwitch);
+                    }
+                },
                 new ObservableTransformer<ActivityRouter.Query, ActivityRouter.Query>() {
                     @Override
                     public ObservableSource<ActivityRouter.Query> apply(Observable<ActivityRouter.Query> upstream) {
                         return upstream.takeUntil(mKillSwitch);
                     }
                 });
+
+
         mRouters.activityRouter()
                 .createQuery(NAVI_TO_SECOND.ALIAS_01, SecondActivity.class, application)
                 .subscribe(new Consumer<ActivityRouter.Query>() {
@@ -66,6 +74,8 @@ public final class ActivityNavigator {
                         query.run();
                     }
                 });
+
+
         mRouters.activityRouter()
                 .createQuery(NAVI_TO_SECOND.ALIAS_02, SecondActivity.class, application)
                 .subscribe(new Consumer<ActivityRouter.Query>() {
@@ -74,12 +84,15 @@ public final class ActivityNavigator {
                         query.run();
                     }
                 });
+
+
         mRouters.simpleRouter()
-                .createQuery(NAVI_TO_SECOND.ALIAS_DO_STH_03)
-                .subscribe(new Consumer<Bundle>() {
+                .createQuery(NAVI_TO_SECOND.ALIAS_GPS_CURRENT_POS)
+                .compose(new GpsPlugin(application))
+                .subscribe(new Consumer<PointF>() {
                     @Override
-                    public void accept(Bundle args) throws Exception {
-                        Toast.makeText(application, String.valueOf(args), Toast.LENGTH_SHORT).show();
+                    public void accept(PointF currentPos) throws Exception {
+                        Toast.makeText(application, "My current position : " + String.valueOf(currentPos), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
